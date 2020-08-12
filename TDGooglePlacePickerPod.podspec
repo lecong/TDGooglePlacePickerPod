@@ -125,8 +125,8 @@ SOFTWARE.
 
   spec.framework = "UIKit"
   spec.framework = "CoreLocation"
-  spec.dependency 'GoogleMaps', '~> 3.8.0'
-  spec.dependency 'GooglePlaces', '~> 3.8.0'
+  spec.dependency 'GoogleMaps', '~> 3.10.0'
+  spec.dependency 'GooglePlaces', '~> 3.10.0'
   spec.dependency 'Alamofire', '~> 4.7.3'
   spec.dependency 'SwiftyJSON', '~> 5.0.0'
 
