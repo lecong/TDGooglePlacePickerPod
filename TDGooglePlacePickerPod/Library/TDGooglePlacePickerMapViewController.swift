@@ -62,7 +62,7 @@ final public class TDGooglePlacePickerMapViewController: UIViewController {
         mapView.isMyLocationEnabled = pickerConfig.isUsedCurrentLocation
         mapView.settings.myLocationButton = pickerConfig.isUsedCurrentLocation
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
-        mapView?.setMinZoom(10, maxZoom: 18)
+        mapView?.setMinZoom(5, maxZoom: 18)
         if self.pickerConfig.zoom < mapView.minZoom{
             pickerConfig.zoom = mapView.minZoom
         } else if self.pickerConfig.zoom > mapView.maxZoom{
@@ -347,10 +347,15 @@ extension TDGooglePlacePickerMapViewController: CLLocationManagerDelegate {
         guard let location = locations.first else {
             return
         }
+        print("didUpdateLocations")
+        print(location.coordinate)
+        
         self.tapLocationEvent(location.coordinate)
     }
     
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Error")
+        print(error)
         print(error.localizedDescription)
     }
     
