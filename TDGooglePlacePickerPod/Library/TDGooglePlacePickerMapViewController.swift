@@ -50,7 +50,7 @@ final public class TDGooglePlacePickerMapViewController: UIViewController {
     
     // Config Section
     func loadNav(){
-        self.navigationController?.title =  pickerConfig.titleNavigationButton
+        self.title =  pickerConfig.titleNavigationButton
         self.navigationItem.leftBarButtonItem?.title = pickerConfig.backButton
         if let backgroundColor = pickerConfig.resultBackgroundColor {
             self.actualLocationView.backgroundColor = backgroundColor
@@ -68,6 +68,7 @@ final public class TDGooglePlacePickerMapViewController: UIViewController {
         } else if self.pickerConfig.zoom > mapView.maxZoom{
             pickerConfig.zoom = mapView.maxZoom
         }
+        mapView?.animate(toZoom: pickerConfig.zoom)
         mapView?.settings.scrollGestures = true
         mapView?.settings.zoomGestures = true
         mapView?.settings.tiltGestures = true
@@ -167,11 +168,33 @@ final public class TDGooglePlacePickerMapViewController: UIViewController {
             seeNearbyplaces(from: coordinate)
         }
         loadingView.startAnimating()
-        TDGooglePlacePickerService.getLocationName(with: coordinate) { [weak self] response in
+        
+        let geoCoder = CLGeocoder()
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+
+        geoCoder.reverseGeocodeLocation(location) {
+           [weak self] (placemarks, error) -> Void in
+            
             self?.loadingView.stopAnimating()
-            self?.selectedPlace = response
-            self?.addMarker(response?.coordinate, name: response?.name)
+            if let mPlacemark = placemarks {
+                print(mPlacemark[0])
+                if let dict = mPlacemark[0].addressDictionary as? [String: Any] {
+                    let name : String? = dict["Name"] as? String
+                    if let address = dict["FormattedAddressLines"] as? Array<String> {
+                        let formatedAddress: String = address.joined(separator: ", ")
+                        let place = PlaceResponse.init(with: "", coordinate: coordinate, name: name, formatedAdress: formatedAddress)
+                        
+                        self?.selectedPlace = place
+                        self?.addMarker(place.coordinate, name: place.name)
+                    }
+                }
+            }
         }
+//        TDGooglePlacePickerService.getLocationName(with: coordinate) { [weak self] response in
+//            self?.loadingView.stopAnimating()
+//            self?.selectedPlace = response
+//            self?.addMarker(response?.coordinate, name: response?.name)
+//        }
     }
     
     fileprivate func seeNearbyplaces(from coordinate: CLLocationCoordinate2D){

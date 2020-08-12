@@ -11,7 +11,7 @@ import GooglePlaces
 import SwiftyJSON
 
 public struct PlaceResponse {
-    public var placeId: String
+    public var placeId: String = ""
     public var name: String
     public var formatedAdress: String = ""
     public var coordinate: CLLocationCoordinate2D
