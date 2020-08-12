@@ -74,12 +74,14 @@ final public class TDGooglePlacePickerService {
             return
         }
         let urlString = "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(coordinates.latitude),\(coordinates.longitude)&key=\(apiKey)"
+        print(urlString)
         
         let urlWithoutSpace = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? urlString
         manager.request(urlWithoutSpace, method: .get, encoding: JSONEncoding.default, headers: nil).responseJSON { response in
             switch response.result {
             //Successful request
             case .success(let value):
+                print(response)
                 //Validate that the request was OK
                 guard let code = response.response?.statusCode, 200 ... 299 ~= code else{
                     result(nil)
@@ -95,6 +97,7 @@ final public class TDGooglePlacePickerService {
                 result(places)
             //Request denied by connection
             case .failure:
+                print(response)
                 result(nil)
             }
         }
